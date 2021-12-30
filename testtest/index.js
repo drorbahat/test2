@@ -32,20 +32,20 @@ $(() => {
         let regionCountriesTbody = $("#region-num-of-countries-table-body")
         regionCountriesTbody.empty()
 
+        let currencyCountriesTbody = $("#currency-num-of-countries-table-body")
+        currencyCountriesTbody.empty()
+
         let nameCitizensRows = ''
         let regionCountriesRows = ''
+        let currencyCountriesRows = ''
 
         let totalCoutriesSum = 0
         let totalPopulation = 0
         let avgPopulation = 0
 
-        let counterAfrica = 0
-        let counterAmericas = 0
-        let counterAsia = 0
-        let counterEurope = 0
-        let counterOceania = 0
-
         let regionArr = []
+        let currencyArr = []
+
 
         countries.forEach(element => {
             totalCoutriesSum++
@@ -61,74 +61,52 @@ $(() => {
                 </td>
             </tr>
             `
-            if (element.region === "Africa") {
-                counterAfrica++
-            } else if (element.region === "Americas") {
-                counterAmericas++
-            } else if (element.region === "Asia") {
-                counterAsia++
-            } else if (element.region === "Europe") {
-                counterEurope++
-            } else if (element.region === "Oceania") {
-                counterOceania++
-            }
 
             regionArr.push(element.region)
 
+            currencyArr.push(Object.keys(!element.currencies ? '' : element.currencies))
+
+        })
 
 
-        });
         avgPopulation = totalPopulation / totalCoutriesSum
 
-        console.log(regionArr)
-        let counts = {}
-        regionArr.forEach((x) => {
-            counts[x] = (counts[x] || 0) + 1
-        })
-        console.log(counts)
+        let regionsObj = {}
+        let currenciesObj = {}
 
-        regionCountriesRows += `
-        <tr>
-            <td>
-                Africa
-            </td>
-            <td>
-                ${counterAfrica}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Americas
-            </td>
-            <td>
-                ${counterAmericas}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Asia
-            </td>
-            <td>
-                ${counterAsia}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Europe
-            </td>
-            <td>
-                ${counterEurope}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Oceania
-            </td>
-            <td>
-                ${counterOceania}
-            </td>
-        </tr>
-        `
+        regionArr.forEach((x) => {
+            regionsObj[x] = (regionsObj[x] || 0) + 1
+        })
+
+        currencyArr.forEach((x) => {
+            currenciesObj[x] = (currenciesObj[x] || 0) + 1
+        })
+
+        for (const key in regionsObj) {
+            regionCountriesRows += `
+            <tr>
+                <td>
+                    ${key}
+                </td>
+                <td>
+                    ${regionsObj[key]}
+                </td>
+            </tr>
+            `
+        }
+
+        for (const key in currenciesObj) {
+            currencyCountriesRows += `
+            <tr>
+                <td>
+                    ${key}
+                </td>
+                <td>
+                    ${currenciesObj[key]}
+                </td>
+            </tr>
+            `
+        }
 
         statsContainer.append(`
         <p>Total countries result: ${totalCoutriesSum}</p>
@@ -138,6 +116,7 @@ $(() => {
 
         nameCitizensTbody.append(nameCitizensRows)
         regionCountriesTbody.append(regionCountriesRows)
-
+        currencyCountriesTbody.append(currencyCountriesRows)
     }
+
 })
